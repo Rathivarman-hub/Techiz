@@ -1,0 +1,71 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../api/axios';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('techiz-user')); } catch { return null; }
+  });
+  const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    const storedUser = user;
+    if (!storedUser?.token) {
+      setInitializing(false);
+      return;
+    }
+
+    api.get('/auth/me')
+      .then(({ data }) => {
+        const refreshedUser = { ...data.data, token: storedUser.token };
+        localStorage.setItem('techiz-user', JSON.stringify(refreshedUser));
+        setUser(refreshedUser);
+      })
+      .catch(() => {
+        localStorage.removeItem('techiz-user');
+        setUser(null);
+      })
+      .finally(() => setInitializing(false));
+  }, []);
+
+  const login = async (email, password) => {
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/login', { email, password });
+      localStorage.setItem('techiz-user', JSON.stringify(data.data));
+      setUser(data.data);
+      return data.data;
+    } finally { setLoading(false); }
+  };
+
+  const register = async (payload) => {
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/register', payload);
+      localStorage.setItem('techiz-user', JSON.stringify(data.data));
+      setUser(data.data);
+      return data.data;
+    } finally { setLoading(false); }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('techiz-user');
+    setUser(null);
+  };
+
+  const updateUser = (updates) => {
+    const updated = { ...user, ...updates };
+    localStorage.setItem('techiz-user', JSON.stringify(updated));
+    setUser(updated);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, initializing, login, register, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
