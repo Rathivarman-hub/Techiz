@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       .then(({ data }) => {
         const refreshedUser = {
           ...data.data,
-          avatar: data.data.avatar ?? storedUser.avatar ?? '',
+          avatar: data.data.avatar || storedUser.avatar || '',
           token: storedUser.token,
         };
         localStorage.setItem('techiz-user', JSON.stringify(refreshedUser));
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (updates) => {
-    const updated = { ...user, ...updates };
+    const updated = { ...user, ...updates, avatar: updates.avatar || user?.avatar || '' };
     localStorage.setItem('techiz-user', JSON.stringify(updated));
     setUser(updated);
   };

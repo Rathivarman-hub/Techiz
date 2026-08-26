@@ -48,8 +48,8 @@ const SettingsPage = () => {
       const payload = { name: form.name, avatar };
       if (form.password) payload.password = form.password;
       const { data } = await api.put('/auth/me', payload);
-      updateUser(data.data);
-      setAvatar(data.data.avatar || '');
+      updateUser({ ...data.data, avatar: data.data.avatar || avatar });
+      setAvatar(data.data.avatar || avatar);
       toast.success('Settings saved');
       setForm((f) => ({ ...f, password: '', confirmPassword: '' }));
     } catch (err) {

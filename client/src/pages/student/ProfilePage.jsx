@@ -47,7 +47,7 @@ const ProfilePage = () => {
       const payload = { name: form.name, college: form.college, rollNumber: form.rollNumber, avatar };
       if (form.password) payload.password = form.password;
       const { data } = await api.put('/auth/me', payload);
-      updateUser(data.data);
+      updateUser({ ...data.data, avatar: data.data.avatar || avatar });
       toast.success('Profile updated successfully');
       setForm((f) => ({ ...f, password: '', confirmPassword: '' }));
     } catch (err) {
