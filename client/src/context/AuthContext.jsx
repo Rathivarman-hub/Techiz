@@ -19,7 +19,11 @@ export const AuthProvider = ({ children }) => {
 
     api.get('/auth/me')
       .then(({ data }) => {
-        const refreshedUser = { ...data.data, token: storedUser.token };
+        const refreshedUser = {
+          ...data.data,
+          avatar: data.data.avatar ?? storedUser.avatar ?? '',
+          token: storedUser.token,
+        };
         localStorage.setItem('techiz-user', JSON.stringify(refreshedUser));
         setUser(refreshedUser);
       })
