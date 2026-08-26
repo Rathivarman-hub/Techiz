@@ -32,8 +32,11 @@ const ProfilePage = () => {
         canvas.width = Math.max(1, Math.round(image.width * scale));
         canvas.height = Math.max(1, Math.round(image.height * scale));
         canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-        setAvatar(canvas.toDataURL('image/jpeg', 0.82));
+        const compressedAvatar = canvas.toDataURL('image/jpeg', 0.82);
+        localStorage.setItem('techiz-avatar', compressedAvatar);
+        setAvatar(compressedAvatar);
       };
+      image.onerror = () => toast.error('Could not read this image');
       image.src = reader.result;
     };
     reader.readAsDataURL(file);
