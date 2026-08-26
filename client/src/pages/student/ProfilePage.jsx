@@ -23,7 +23,19 @@ const ProfilePage = () => {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => setAvatar(reader.result);
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const size = 512;
+        const scale = Math.min(1, size / Math.max(image.width, image.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        setAvatar(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      image.src = reader.result;
+    };
     reader.readAsDataURL(file);
   };
 

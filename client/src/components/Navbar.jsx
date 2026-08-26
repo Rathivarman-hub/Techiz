@@ -72,6 +72,9 @@ const TechizNavbar = () => {
 
             {user ? (
               <>
+                <div className="navbar-user-avatar" aria-label="Profile photo">
+                  {user.avatar ? <img src={user.avatar} alt="" /> : user.name?.charAt(0).toUpperCase()}
+                </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                   Hi, {user.name?.split(' ')[0]}
                 </span>
