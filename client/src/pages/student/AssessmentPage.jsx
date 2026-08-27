@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,6 +48,20 @@ const AssessmentPage = () => {
   const submittedRef = useRef(false);
   const currentQuestion = questions[currentIdx];
   const effectiveAnswer = selectedAnswer;
+  const answeredQuestionIds = useMemo(() => new Set(answers.map((answer) => answer.questionId)), [answers]);
+
+  const upsertAnswer = useCallback((questionId, questionAnswer, timeSpent) => {
+    if (!questionId) return;
+    setAnswers((prev) => {
+      const existingIndex = prev.findIndex((answer) => answer.questionId === questionId);
+      if (existingIndex === -1) {
+        return [...prev, { questionId, selectedAnswer: questionAnswer, timeTaken: timeSpent }];
+      }
+      const nextAnswers = [...prev];
+      nextAnswers[existingIndex] = { ...nextAnswers[existingIndex], selectedAnswer: questionAnswer, timeTaken: timeSpent };
+      return nextAnswers;
+    });
+  }, []);
 
   // Calculate question stats
   const answeredCount = answers.length;
@@ -80,22 +94,20 @@ const AssessmentPage = () => {
 
   // Timer - must be declared before moveNext since moveNext depends on 'seconds'
   const { seconds, percentage, isRunning, isUrgent, start, reset, stop } = useTimer(TIMER_SECONDS, () => {
-    const timeTaken = TIMER_SECONDS - seconds;
-    setAnswers((prev) => [...prev, { questionId: questions[currentIdx]?._id, selectedAnswer: '', timeTaken }]);
+    if (!questions[currentIdx]?._id) return;
+    upsertAnswer(questions[currentIdx]._id, '', TIMER_SECONDS);
   });
 
   const moveNext = useCallback(() => {
-    if (effectiveAnswer) {
-      setAnswers((prev) => {
-        const exists = prev.find((answer) => answer.questionId === questions[currentIdx]?._id);
-        if (exists) return prev;
-        return [...prev, {
-          questionId: questions[currentIdx]._id,
-          selectedAnswer: effectiveAnswer,
-          timeTaken: TIMER_SECONDS - seconds,
-        }];
-      });
+    const activeQuestionId = questions[currentIdx]?._id;
+    if (activeQuestionId) {
+      if (effectiveAnswer) {
+        upsertAnswer(activeQuestionId, effectiveAnswer, TIMER_SECONDS - seconds);
+      } else if (!answeredQuestionIds.has(activeQuestionId)) {
+        upsertAnswer(activeQuestionId, '', TIMER_SECONDS - seconds);
+      }
     }
+
     const next = currentIdx + 1;
     if (next >= questions.length) {
       playSuccess();
@@ -104,15 +116,22 @@ const AssessmentPage = () => {
       setCurrentIdx(next);
       setSelectedAnswer('');
       setShowFeedback(false);
+      reset();
+      setTimeout(() => start(), 100);
     }
-  }, [currentIdx, questions, effectiveAnswer, seconds, handleSubmit, playSuccess]);
+  }, [currentIdx, questions, effectiveAnswer, seconds, answeredQuestionIds, handleSubmit, playSuccess, upsertAnswer, reset, start]);
 
   // Handle timer expiration
   useEffect(() => {
-    if (seconds === 0 && isRunning && questions.length > 0) {
+    if (seconds === 0 && isRunning && questions.length > 0 && currentQuestion?._id) {
+      const questionId = currentQuestion._id;
+      if (!answeredQuestionIds.has(questionId)) {
+        upsertAnswer(questionId, '', TIMER_SECONDS);
+      }
+      stop();
       moveNext();
     }
-  }, [seconds, isRunning, questions.length, moveNext]);
+  }, [seconds, isRunning, questions.length, currentQuestion, answeredQuestionIds, upsertAnswer, stop, moveNext]);
 
   // Sound effects
   useEffect(() => {
@@ -191,48 +210,42 @@ const AssessmentPage = () => {
       return;
     }
     const timeTaken = TIMER_SECONDS - seconds;
-    setAnswers((prev) => {
-      const exists = prev.find((answer) => answer.questionId === questions[currentIdx]._id);
-      if (exists) return prev;
-      return [...prev, { questionId: questions[currentIdx]._id, selectedAnswer: effectiveAnswer, timeTaken }];
-    });
+    upsertAnswer(questions[currentIdx]._id, effectiveAnswer, timeTaken);
     stop();
     setShowFeedback(true);
   };
 
   const handleNext = () => {
-    const timeTaken = TIMER_SECONDS - seconds;
-    setAnswers((prev) => {
-      const exists = prev.find(a => a.questionId === questions[currentIdx]._id);
-      if (exists) return prev;
-      return [...prev, { questionId: questions[currentIdx]._id, selectedAnswer: effectiveAnswer, timeTaken }];
-    });
+    if (questions[currentIdx]?._id) {
+      const timeTaken = TIMER_SECONDS - seconds;
+      upsertAnswer(questions[currentIdx]._id, effectiveAnswer || '', timeTaken);
+    }
     moveNext();
   };
 
   const handleSkip = () => {
-    const timeTaken = TIMER_SECONDS - seconds;
-    setAnswers((prev) => {
-      const exists = prev.find(a => a.questionId === questions[currentIdx]._id);
-      if (exists) return prev;
-      return [...prev, { questionId: questions[currentIdx]._id, selectedAnswer: '', timeTaken }];
-    });
+    if (questions[currentIdx]?._id) {
+      const timeTaken = TIMER_SECONDS - seconds;
+      upsertAnswer(questions[currentIdx]._id, '', timeTaken);
+    }
     moveNext();
   };
 
   // Jump to question
   const handleJumpQuestion = (index) => {
-    if (currentIdx !== index) {
-      if (selectedAnswer && !answers.find(a => a.questionId === questions[currentIdx]._id)) {
-        const timeTaken = TIMER_SECONDS - seconds;
-        setAnswers((prev) => [...prev, { questionId: questions[currentIdx]._id, selectedAnswer: effectiveAnswer, timeTaken }]);
-      }
-      setCurrentIdx(index);
-      setSelectedAnswer('');
-      setShowFeedback(false);
-      reset();
-      setTimeout(() => start(), 100);
+    const targetQuestion = questions[index];
+    if (!targetQuestion || index === currentIdx) return;
+    if (index < currentIdx || answeredQuestionIds.has(targetQuestion._id)) return;
+
+    if (selectedAnswer && !answeredQuestionIds.has(questions[currentIdx]._id)) {
+      const timeTaken = TIMER_SECONDS - seconds;
+      upsertAnswer(questions[currentIdx]._id, effectiveAnswer, timeTaken);
     }
+    setCurrentIdx(index);
+    setSelectedAnswer('');
+    setShowFeedback(false);
+    reset();
+    setTimeout(() => start(), 100);
   };
 
   if (loading) return <Spinner text="Preparing your assessment..." />;
@@ -297,14 +310,16 @@ const AssessmentPage = () => {
           <div className="navigator-list">
             {questions.map((que, idx) => {
               const isCurrentQuestion = idx === currentIdx;
-              const isQuestionAnswered = answers.some(a => a.questionId === que._id);
+              const isQuestionAnswered = answeredQuestionIds.has(que._id);
+              const isLocked = idx < currentIdx || isQuestionAnswered;
               return (
                 <motion.button
                   key={que._id}
                   className={`navigator-item ${isCurrentQuestion ? 'active' : ''} ${isQuestionAnswered ? 'answered' : ''}`}
                   onClick={() => handleJumpQuestion(idx)}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ x: 0 }}
+                  disabled={isLocked}
+                  whileHover={isLocked ? undefined : { x: 4 }}
+                  whileTap={isLocked ? undefined : { x: 0 }}
                 >
                   <span className="navigator-number">{idx + 1}</span>
                   <div className="navigator-info">
