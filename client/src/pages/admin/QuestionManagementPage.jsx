@@ -149,24 +149,24 @@ const QuestionManagementPage = () => {
             <div style={{ overflowX: 'auto' }}>
               <table className="techiz-table question-table">
                 <thead>
-                  <tr><th>Language</th><th>Type</th><th>Question</th><th>Difficulty</th><th>Marks</th><th>Actions</th></tr>
+                  <tr><th>Language Type</th><th>Question</th><th>Difficulty</th><th>Marks</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                   {questions.map((q) => (
                     <tr key={q._id}>
-                      <td style={{ fontWeight: 600 }}>{getLanguageLabel(q.language)}</td>
-                      <td>
-                        <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
+                      <td className="question-language-cell">
+                        <span className="question-language-name">{getLanguageLabel(q.language)}</span>
+                        <span className="question-type-pill" style={{ background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
                       </td>
-                      <td style={{ maxWidth: 300, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                      <td className="question-text-cell" style={{ maxWidth: 300, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                         {q.question.length > 80 ? q.question.substring(0, 80) + '...' : q.question}
                       </td>
                       <td>
-                        <span style={{ padding: '2px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 600, background: q.difficulty === 'easy' ? 'rgba(6,214,160,0.15)' : q.difficulty === 'medium' ? 'rgba(255,209,102,0.15)' : 'rgba(239,71,111,0.15)', color: q.difficulty === 'easy' ? 'var(--success)' : q.difficulty === 'medium' ? '#c8a200' : 'var(--danger)' }}>{q.difficulty}</span>
+                        <span className="question-difficulty-pill" style={{ background: q.difficulty === 'easy' ? 'rgba(6,214,160,0.15)' : q.difficulty === 'medium' ? 'rgba(255,209,102,0.15)' : 'rgba(239,71,111,0.15)', color: q.difficulty === 'easy' ? 'var(--success)' : q.difficulty === 'medium' ? '#c8a200' : 'var(--danger)' }}>{q.difficulty}</span>
                       </td>
-                      <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{q.marks}</td>
+                      <td className="question-marks-cell" style={{ fontWeight: 700, color: 'var(--primary)' }}>{q.marks}</td>
                       <td>
-                        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
+                        <div className="question-actions-cell">
                           <button onClick={() => openEdit(q)} className="admin-icon-button" title="Edit question"><FiEdit2 /></button>
                           <button onClick={() => handleDelete(q._id)} disabled={deleting === q._id} className="admin-icon-button" title="Delete question" style={{ color: 'var(--danger)' }}><FiTrash2 /></button>
                         </div>
