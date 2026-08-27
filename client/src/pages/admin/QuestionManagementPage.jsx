@@ -6,9 +6,12 @@ import api from '../../api/axios';
 import Spinner from '../../components/Spinner';
 
 const LANGS = ['java', 'python', 'c', 'cpp', 'javascript'];
+const LANGUAGE_LABELS = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
 const TYPES = ['mcq', 'output', 'syntax', 'error', 'coding'];
 const DIFFS = ['easy', 'medium', 'hard'];
 const EMPTY_Q = { language: 'java', type: 'mcq', question: '', codeSnippet: '', options: ['', '', '', ''], answer: '', difficulty: 'easy', explanation: '' };
+
+const getLanguageLabel = (language) => LANGUAGE_LABELS[language] || (language || '').toUpperCase();
 
 const QuestionManagementPage = () => {
   const [questions, setQuestions] = useState([]);
@@ -144,14 +147,14 @@ const QuestionManagementPage = () => {
         {loading ? <Spinner text="Loading questions..." /> : (
           <div className="techiz-card p-0 overflow-hidden fade-in">
             <div style={{ overflowX: 'auto' }}>
-              <table className="techiz-table">
+              <table className="techiz-table question-table">
                 <thead>
                   <tr><th>Language</th><th>Type</th><th>Question</th><th>Difficulty</th><th>Marks</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                   {questions.map((q) => (
                     <tr key={q._id}>
-                      <td style={{ fontWeight: 600 }}>{q.language.toUpperCase()}</td>
+                      <td style={{ fontWeight: 600 }}>{getLanguageLabel(q.language)}</td>
                       <td>
                         <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
                       </td>
@@ -163,7 +166,7 @@ const QuestionManagementPage = () => {
                       </td>
                       <td style={{ fontWeight: 700, color: 'var(--primary)' }}>{q.marks}</td>
                       <td>
-                        <div style={{ display: 'flex', gap: 8 }}>
+                        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center' }}>
                           <button onClick={() => openEdit(q)} className="admin-icon-button" title="Edit question"><FiEdit2 /></button>
                           <button onClick={() => handleDelete(q._id)} disabled={deleting === q._id} className="admin-icon-button" title="Delete question" style={{ color: 'var(--danger)' }}><FiTrash2 /></button>
                         </div>
@@ -197,7 +200,7 @@ const QuestionManagementPage = () => {
                 <Col md={4}>
                   <label className="techiz-label">Language *</label>
                   <Form.Select className="techiz-input" value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value })} style={{ padding: '12px 14px' }} required>
-                    {LANGS.map((l) => <option key={l} value={l}>{l.toUpperCase()}</option>)}
+                    {LANGS.map((l) => <option key={l} value={l}>{getLanguageLabel(l)}</option>)}
                   </Form.Select>
                 </Col>
                 <Col md={4}>

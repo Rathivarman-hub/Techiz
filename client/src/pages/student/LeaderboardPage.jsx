@@ -92,7 +92,7 @@ const LeaderboardPage = () => {
                   {filtered.map((entry) => (
                     <tr key={entry.userId}>
                       <td>
-                        <div className={`rank-badge rank-${entry.rank <= 3 ? entry.rank : 'other'}`} style={{ margin: '0 auto' }}>
+                        <div className={`rank-badge rank-${entry.rank <= 3 ? entry.rank : 'other'}`}>
                           {entry.rank}
                         </div>
                       </td>

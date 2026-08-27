@@ -140,9 +140,9 @@ const StudentsPage = () => {
         </div>
 
         <div className="glass-card mb-4 fade-in" style={{ padding: '14px 20px' }}>
-          <div className="admin-search" style={{ position: 'relative' }}>
-            <FiSearch style={{ position: 'absolute', left: 14, top: 14, color: 'var(--text-muted)' }} />
-            <input className="techiz-input" placeholder="Search by name, email or college" value={search} onChange={(e) => setSearch(e.target.value)} style={{ paddingLeft: 40 }} />
+          <div className="admin-search">
+            <FiSearch />
+            <input className="techiz-input" placeholder="Search by name, email or college" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
 
@@ -163,8 +163,12 @@ const StudentsPage = () => {
                         <tr>
                           <td style={{ color: 'var(--text-muted)' }}>{(page - 1) * 15 + i + 1}</td>
                           <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{s.name}</td>
-                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.email}</td>
-                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.college || '—'}</td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: 220 }}>
+                            <span style={{ display: 'inline-block', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>{s.email}</span>
+                          </td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: 170 }}>
+                            <span style={{ display: 'inline-block', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>{s.college || '—'}</span>
+                          </td>
                           <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.rollNumber || '—'}</td>
                           <td style={{ fontWeight: 600, color: 'var(--primary)' }}>{s.assessmentStats?.attempts || 0}</td>
                           <td style={{ fontWeight: 600, color: 'var(--secondary)' }}>{bestScore}</td>

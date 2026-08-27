@@ -466,6 +466,18 @@ code, pre, .code-block {
   white-space: nowrap;
 }
 
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3) {
+  min-width: 220px;
+  max-width: 220px;
+}
+
+.admin-table th:nth-child(4),
+.admin-table td:nth-child(4) {
+  min-width: 170px;
+  max-width: 170px;
+}
+
 .admin-table th:first-child,
 .admin-table td:first-child {
   padding-left: 20px;
@@ -486,7 +498,48 @@ code, pre, .code-block {
 }
 
 .admin-search {
+  position: relative;
   max-width: 440px;
+  width: 100%;
+}
+
+.admin-search svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  width: 18px;
+  height: 18px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.admin-search .techiz-input {
+  width: 100%;
+  min-height: 52px;
+  padding-left: 44px !important;
+  border-radius: 999px !important;
+  border: 1.5px solid rgba(112, 150, 175, 0.7) !important;
+  background: rgba(255, 255, 255, 0.24) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.admin-table td:last-child {
+  padding-right: 18px;
+}
+
+.admin-table td:last-child button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  border-radius: 8px;
+  padding: 0;
 }
 
 .admin-icon-button {
@@ -869,12 +922,19 @@ code, pre, .code-block {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 1rem;
   flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.techiz-table th:first-child,
+.techiz-table td:first-child {
+  text-align: center;
+  width: 90px;
 }
 
 .rank-1 { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #fff; }
