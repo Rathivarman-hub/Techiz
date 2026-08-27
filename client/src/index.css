@@ -941,6 +941,7 @@ code, pre, .code-block {
 .techiz-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .techiz-table th {
@@ -952,6 +953,8 @@ code, pre, .code-block {
   font-weight: 700;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
 }
 
 .techiz-table td {
@@ -959,9 +962,32 @@ code, pre, .code-block {
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
   font-size: 0.9rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.techiz-table th:last-child,
+.techiz-table td:last-child {
+  text-align: right;
 }
 
 .techiz-table tr:hover td { background: rgba(108, 99, 255, 0.04); }
+
+.assessment-history-table {
+  table-layout: fixed;
+}
+
+.assessment-history-table th,
+.assessment-history-table td {
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.assessment-history-table th:last-child,
+.assessment-history-table td:last-child {
+  text-align: right;
+}
 
 /* ============================================
    FORM ELEMENTS

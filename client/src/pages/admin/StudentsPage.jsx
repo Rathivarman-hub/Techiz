@@ -195,7 +195,7 @@ const StudentsPage = () => {
                               ) : studentAssessments[s._id]?.length === 0 ? (
                                 <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>No assessments taken</div>
                               ) : (
-                                <table style={{ width: '100%', fontSize: '0.9rem' }}>
+                                <table className="techiz-table assessment-history-table" style={{ width: '100%', fontSize: '0.9rem' }}>
                                   <thead>
                                     <tr style={{ borderBottom: '1px solid var(--border)' }}>
                                       <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Language</th>
@@ -215,15 +215,9 @@ const StudentsPage = () => {
                                           {a.percentage}%
                                         </td>
                                         <td style={{ padding: '8px' }}>
-                                          {a.status === 'completed' ? (
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: 'rgba(6,214,160,0.15)', color: 'var(--success)' }}>completed</span>
-                                          ) : a.status === 'failed' ? (
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: 'rgba(239,68,68,0.12)', color: 'var(--danger)' }}>failed</span>
-                                          ) : a.status === 'auto-submitted' ? (
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: 'rgba(255,209,102,0.15)', color: '#c8a200' }}>auto-submitted</span>
-                                          ) : (
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: 'rgba(255,209,102,0.15)', color: '#c8a200' }}>{a.status}</span>
-                                          )}
+                                          <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: a.status === 'completed' ? 'rgba(6,214,160,0.15)' : 'rgba(255,209,102,0.15)', color: a.status === 'completed' ? 'var(--success)' : '#c8a200' }}>
+                                            {a.status}
+                                          </span>
                                         </td>
                                         <td style={{ padding: '8px', fontSize: '0.85rem' }}>
                                           {new Date(a.completedAt).toLocaleDateString('en-IN')}

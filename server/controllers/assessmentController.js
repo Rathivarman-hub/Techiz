@@ -92,7 +92,7 @@ export const submitAssessment = asyncHandler(async (req, res) => {
   assessment.answers = processedAnswers;
   assessment.score = score;
   assessment.percentage = percentage;
-  assessment.status = status === 'auto-submitted' ? 'auto-submitted' : percentage >= 40 ? 'completed' : 'failed';
+  assessment.status = status;
   assessment.completedAt = new Date();
   await assessment.save();
 
