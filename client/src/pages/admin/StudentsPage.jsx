@@ -154,86 +154,94 @@ const StudentsPage = () => {
                   <tr><th>#</th><th>Name</th><th>Email</th><th>College</th><th>Roll No.</th><th>Attempts</th><th>Best Score</th><th>Best %</th><th>Joined</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
-                  {students.map((s, i) => (
-                    <React.Fragment key={s._id}>
-                      <tr>
-                        <td style={{ color: 'var(--text-muted)' }}>{(page - 1) * 15 + i + 1}</td>
-                        <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{s.name}</td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.email}</td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.college || '—'}</td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.rollNumber || '—'}</td>
-                        <td style={{ fontWeight: 600, color: 'var(--primary)' }}>{s.assessmentStats?.attempts || 0}</td>
-                        <td style={{ fontWeight: 600, color: 'var(--secondary)' }}>{s.assessmentStats?.bestScore || 0}</td>
-                        <td>
-                          {s.assessmentStats?.bestPct > 0 ? (
-                            <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 700, background: s.assessmentStats.bestPct >= 70 ? 'rgba(6,214,160,0.15)' : 'rgba(255,209,102,0.15)', color: s.assessmentStats.bestPct >= 70 ? 'var(--success)' : '#c8a200' }}>
-                              {s.assessmentStats.bestPct}%
-                            </span>
-                          ) : '—'}
-                        </td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{new Date(s.createdAt).toLocaleDateString('en-IN')}</td>
-                        <td>
-                          <button
-                            onClick={() => handleExpandStudent(s._id)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', fontSize: '1.2rem' }}
-                            title="View assessments"
-                          >
-                            {expandedStudent === s._id ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}
-                          </button>
-                        </td>
-                      </tr>
-                      {expandedStudent === s._id && (
-                        <tr style={{ background: 'var(--bg-secondary)' }}>
-                          <td colSpan="10" style={{ padding: '16px' }}>
-                            {loadingAssessments[s._id] ? (
-                              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Loading assessments...</div>
-                            ) : studentAssessments[s._id]?.length === 0 ? (
-                              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>No assessments taken</div>
-                            ) : (
-                              <table style={{ width: '100%', fontSize: '0.9rem' }}>
-                                <thead>
-                                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Language</th>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Score</th>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Percentage</th>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Status</th>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Date</th>
-                                    <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Action</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {studentAssessments[s._id]?.map((a) => (
-                                    <tr key={a._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                                      <td style={{ padding: '8px' }}>{langMap[a.language] || a.language}</td>
-                                      <td style={{ padding: '8px', fontWeight: 600 }}>{a.score}/{a.maxScore}</td>
-                                      <td style={{ padding: '8px', fontWeight: 600, color: a.percentage >= 70 ? 'var(--success)' : a.percentage >= 40 ? '#c8a200' : 'var(--danger)' }}>
-                                        {a.percentage}%
-                                      </td>
-                                      <td style={{ padding: '8px' }}>
-                                        <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: a.status === 'completed' ? 'rgba(6,214,160,0.15)' : 'rgba(255,209,102,0.15)', color: a.status === 'completed' ? 'var(--success)' : '#c8a200' }}>
-                                          {a.status}
-                                        </span>
-                                      </td>
-                                      <td style={{ padding: '8px', fontSize: '0.85rem' }}>
-                                        {new Date(a.completedAt).toLocaleDateString('en-IN')}
-                                      </td>
-                                      <td style={{ padding: '8px' }}>
-                                        <button
-                                          onClick={() => handleEditMarks({ ...a, userId: s._id })}
-                                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
-                                          title="Edit marks"
-                                        >
-                                          <FiEdit2 size={16} />
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            )}
+                  {students.map((s, i) => {
+                    const bestScore = Number(s.assessmentStats?.bestScore ?? 0);
+                    const bestPct = Number(s.assessmentStats?.bestPct ?? 0);
+
+                    return (
+                      <React.Fragment key={s._id}>
+                        <tr>
+                          <td style={{ color: 'var(--text-muted)' }}>{(page - 1) * 15 + i + 1}</td>
+                          <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{s.name}</td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.email}</td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.college || '—'}</td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{s.rollNumber || '—'}</td>
+                          <td style={{ fontWeight: 600, color: 'var(--primary)' }}>{s.assessmentStats?.attempts || 0}</td>
+                          <td style={{ fontWeight: 600, color: 'var(--secondary)' }}>{bestScore}</td>
+                          <td>
+                            {bestPct > 0 ? (
+                              <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 700, background: bestPct >= 70 ? 'rgba(6,214,160,0.15)' : 'rgba(255,209,102,0.15)', color: bestPct >= 70 ? 'var(--success)' : '#c8a200' }}>
+                                {bestPct}%
+                              </span>
+                            ) : '—'}
+                          </td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{new Date(s.createdAt).toLocaleDateString('en-IN')}</td>
+                          <td>
+                            <button
+                              onClick={() => handleExpandStudent(s._id)}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', fontSize: '1.2rem' }}
+                              title="View assessments"
+                            >
+                              {expandedStudent === s._id ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}
+                            </button>
                           </td>
                         </tr>
-                      )}
+
+                        {expandedStudent === s._id && (
+                          <tr style={{ background: 'var(--bg-secondary)' }}>
+                            <td colSpan="10" style={{ padding: '16px' }}>
+                              {loadingAssessments[s._id] ? (
+                                <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Loading assessments...</div>
+                              ) : studentAssessments[s._id]?.length === 0 ? (
+                                <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>No assessments taken</div>
+                              ) : (
+                                <table style={{ width: '100%', fontSize: '0.9rem' }}>
+                                  <thead>
+                                    <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Language</th>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Score</th>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Percentage</th>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Status</th>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Date</th>
+                                      <th style={{ textAlign: 'left', padding: '8px', color: 'var(--text-muted)' }}>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {studentAssessments[s._id]?.map((a) => (
+                                      <tr key={a._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                                        <td style={{ padding: '8px' }}>{langMap[a.language] || a.language}</td>
+                                        <td style={{ padding: '8px', fontWeight: 600 }}>{a.score}/{a.maxScore}</td>
+                                        <td style={{ padding: '8px', fontWeight: 600, color: a.percentage >= 70 ? 'var(--success)' : a.percentage >= 40 ? '#c8a200' : 'var(--danger)' }}>
+                                          {a.percentage}%
+                                        </td>
+                                        <td style={{ padding: '8px' }}>
+                                          <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.75rem', fontWeight: 600, background: a.status === 'completed' ? 'rgba(6,214,160,0.15)' : 'rgba(255,209,102,0.15)', color: a.status === 'completed' ? 'var(--success)' : '#c8a200' }}>
+                                            {a.status}
+                                          </span>
+                                        </td>
+                                        <td style={{ padding: '8px', fontSize: '0.85rem' }}>
+                                          {new Date(a.completedAt).toLocaleDateString('en-IN')}
+                                        </td>
+                                        <td style={{ padding: '8px' }}>
+                                          <button
+                                            onClick={() => handleEditMarks({ ...a, userId: s._id })}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
+                                            title="Edit marks"
+                                          >
+                                            <FiEdit2 size={16} />
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
                     </React.Fragment>
                   ))}
                 </tbody>
