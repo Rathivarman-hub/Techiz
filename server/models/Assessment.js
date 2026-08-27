@@ -17,7 +17,7 @@ const assessmentSchema = new mongoose.Schema(
     maxScore: { type: Number, default: 0 },
     percentage: { type: Number, default: 0 },
     rank: { type: Number, default: 0 },
-    status: { type: String, enum: ['in-progress', 'completed', 'auto-submitted'], default: 'in-progress' },
+    status: { type: String, enum: ['in-progress', 'completed', 'failed', 'auto-submitted'], default: 'in-progress' },
     startedAt: { type: Date, default: Date.now },
     completedAt: { type: Date },
   },
