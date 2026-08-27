@@ -154,9 +154,11 @@ const QuestionManagementPage = () => {
                 <tbody>
                   {questions.map((q) => (
                     <tr key={q._id}>
-                      <td className="question-language-cell">
-                        <span className="question-language-name">{getLanguageLabel(q.language)}</span>
-                        <span className="question-type-pill" style={{ background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
+                      <td>
+                        <div className="question-language-cell">
+                          <span className="question-language-name">{getLanguageLabel(q.language)}</span>
+                          <span className="question-type-pill" style={{ background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
+                        </div>
                       </td>
                       <td className="question-text-cell" style={{ maxWidth: 300, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                         {q.question.length > 80 ? q.question.substring(0, 80) + '...' : q.question}

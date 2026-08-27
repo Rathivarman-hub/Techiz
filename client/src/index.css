@@ -1062,9 +1062,12 @@ code, pre, .code-block {
 }
 
 .question-table th:nth-child(1),
-.question-table td:nth-child(1) {
+.question-table td:nth-child(1),
+.question-table.techiz-table th:first-child,
+.question-table.techiz-table td:first-child {
   width: 25%;
   min-width: 220px;
+  text-align: left;
 }
 
 .question-table th:nth-child(2),
@@ -1085,7 +1088,9 @@ code, pre, .code-block {
 }
 
 .question-table th:nth-child(5),
-.question-table td:nth-child(5) {
+.question-table td:nth-child(5),
+.question-table.techiz-table th:last-child,
+.question-table.techiz-table td:last-child {
   width: 13%;
   text-align: center;
 }
