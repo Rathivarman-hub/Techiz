@@ -242,8 +242,6 @@ const StudentsPage = () => {
                       </React.Fragment>
                     );
                   })}
-                    </React.Fragment>
-                  ))}
                 </tbody>
               </table>
               {students.length === 0 && <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No students found.</div>}
