@@ -1020,7 +1020,8 @@ code, pre, .code-block {
 .question-language-cell {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 18px;
   font-weight: 600;
   min-width: 220px;
 }
@@ -1032,10 +1033,9 @@ code, pre, .code-block {
 
 .question-search-field svg {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   z-index: 1;
-  display: block;
   width: 18px;
   height: 18px;
   color: var(--text-muted);
@@ -1044,10 +1044,8 @@ code, pre, .code-block {
 }
 
 .question-search-input {
-  box-sizing: border-box;
   min-height: 52px;
-  padding-left: 48px !important;
-  text-indent: 0 !important;
+  padding-left: 42px !important;
 }
 
 .question-language-name {
@@ -1067,6 +1065,10 @@ code, pre, .code-block {
   font-weight: 700;
   line-height: 1.2;
   text-transform: lowercase;
+}
+
+.question-language-cell .question-type-pill {
+  flex-shrink: 0;
 }
 
 .question-text-cell {
@@ -1102,7 +1104,6 @@ code, pre, .code-block {
 .question-table th:nth-child(2),
 .question-table td:nth-child(2) {
   width: 35%;
-  text-align: left;
 }
 
 .question-table th:nth-child(3),
