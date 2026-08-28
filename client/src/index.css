@@ -1131,9 +1131,31 @@ code, pre, .code-block {
   white-space: nowrap;
 }
 
+.assessment-history-table th:nth-child(1),
+.assessment-history-table td:nth-child(1) { width: 16%; }
+
+.assessment-history-table th:nth-child(2),
+.assessment-history-table td:nth-child(2) { width: 14%; }
+
+.assessment-history-table th:nth-child(3),
+.assessment-history-table td:nth-child(3) { width: 18%; }
+
+.assessment-history-table th:nth-child(4),
+.assessment-history-table td:nth-child(4) { width: 18%; }
+
+.assessment-history-table th:nth-child(5),
+.assessment-history-table td:nth-child(5) { width: 20%; }
+
+.assessment-history-table th:first-child,
+.assessment-history-table td:first-child {
+  width: 16%;
+  text-align: left;
+}
+
 .assessment-history-table th:last-child,
 .assessment-history-table td:last-child {
-  text-align: right;
+  width: 14%;
+  text-align: right !important;
 }
 
 /* ============================================
