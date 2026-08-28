@@ -84,7 +84,7 @@ const LeaderboardPage = () => {
         {loading ? <Spinner text="Loading leaderboard..." /> : (
           <div className="techiz-card p-0 overflow-hidden fade-in">
             <div style={{ overflowX: 'auto' }}>
-              <table className="techiz-table">
+              <table className="techiz-table leaderboard-table">
                 <thead>
                   <tr><th>Rank</th><th>Student</th><th>College</th><th>Language</th><th>Best Score</th><th>Percentage</th><th>Attempts</th></tr>
                 </thead>

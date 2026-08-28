@@ -942,6 +942,38 @@ code, pre, .code-block {
 .rank-3 { background: linear-gradient(135deg, #cd7f32, #a05c1a); color: #fff; }
 .rank-other { background: var(--bg-secondary); color: var(--text-muted); border: 1px solid var(--border); }
 
+.leaderboard-table {
+  min-width: 980px;
+}
+
+.leaderboard-table th:first-child,
+.leaderboard-table td:first-child {
+  width: 8%;
+  text-align: left;
+}
+
+.leaderboard-table th:nth-child(2),
+.leaderboard-table td:nth-child(2) { width: 16%; }
+
+.leaderboard-table th:nth-child(3),
+.leaderboard-table td:nth-child(3) { width: 16%; }
+
+.leaderboard-table th:nth-child(4),
+.leaderboard-table td:nth-child(4) { width: 16%; }
+
+.leaderboard-table th:nth-child(5),
+.leaderboard-table td:nth-child(5) { width: 16%; }
+
+.leaderboard-table th:nth-child(6),
+.leaderboard-table td:nth-child(6) { width: 18%; }
+
+.leaderboard-table th:nth-child(7),
+.leaderboard-table td:nth-child(7) { width: 10%; }
+
+.leaderboard-table .rank-badge {
+  margin: 0;
+}
+
 /* ============================================
    ADMIN DASHBOARD
    ============================================ */
