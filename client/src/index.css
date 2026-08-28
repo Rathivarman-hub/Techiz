@@ -1032,9 +1032,10 @@ code, pre, .code-block {
 
 .question-search-field svg {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   z-index: 1;
+  display: block;
   width: 18px;
   height: 18px;
   color: var(--text-muted);
@@ -1043,8 +1044,10 @@ code, pre, .code-block {
 }
 
 .question-search-input {
+  box-sizing: border-box;
   min-height: 52px;
-  padding-left: 42px !important;
+  padding-left: 48px !important;
+  text-indent: 0 !important;
 }
 
 .question-language-name {
@@ -1099,6 +1102,7 @@ code, pre, .code-block {
 .question-table th:nth-child(2),
 .question-table td:nth-child(2) {
   width: 35%;
+  text-align: left;
 }
 
 .question-table th:nth-child(3),
