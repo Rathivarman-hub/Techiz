@@ -30,6 +30,7 @@ const AnalyticsPage = () => {
 
   if (loading) return <Spinner text="Loading analytics..." />;
 
+  const LANGUAGE_LABELS = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
   const langColors = { java: '#f89820', python: '#3776ab', c: '#a8b9cc', cpp: '#00599c', javascript: '#f7df1e' };
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const opts = { responsive: true, plugins: { legend: { labels: { color: '#888' } } }, scales: { x: { ticks: { color: '#888' } }, y: { ticks: { color: '#888' } } } };
@@ -37,11 +38,11 @@ const AnalyticsPage = () => {
   const charts = [
     {
       title: <><FiGlobe /> Language Distribution</>,
-      chart: <Doughnut data={{ labels: langStats.map((l) => l._id.toUpperCase()), datasets: [{ data: langStats.map((l) => l.count), backgroundColor: langStats.map((l) => langColors[l._id] || '#6c63ff'), borderWidth: 2 }] }} options={{ responsive: true, plugins: { legend: { labels: { color: '#888' } } } }} />,
+      chart: <Doughnut data={{ labels: langStats.map((l) => LANGUAGE_LABELS[l._id] || l._id.toUpperCase()), datasets: [{ data: langStats.map((l) => l.count), backgroundColor: langStats.map((l) => langColors[l._id] || '#6c63ff'), borderWidth: 2 }] }} options={{ responsive: true, plugins: { legend: { labels: { color: '#888' } } } }} />,
     },
     {
       title: <><FiBarChart2 /> Average Score by Language</>,
-      chart: <Bar data={{ labels: langStats.map((l) => l._id.toUpperCase()), datasets: [{ label: 'Avg %', data: langStats.map((l) => Math.round(l.avgScore || 0)), backgroundColor: langStats.map((l) => `${langColors[l._id] || '#6c63ff'}cc`), borderRadius: 8 }] }} options={{ ...opts, plugins: { ...opts.plugins, legend: { display: false } } }} />,
+      chart: <Bar data={{ labels: langStats.map((l) => LANGUAGE_LABELS[l._id] || l._id.toUpperCase()), datasets: [{ label: 'Avg %', data: langStats.map((l) => Math.round(l.avgScore || 0)), backgroundColor: langStats.map((l) => `${langColors[l._id] || '#6c63ff'}cc`), borderRadius: 8 }] }} options={{ ...opts, plugins: { ...opts.plugins, legend: { display: false } } }} />,
     },
     {
       title: <><FiTrendingUp /> Monthly Attempt Trends</>,

@@ -6,6 +6,8 @@ import { FiCopy, FiCheck } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import './CodeDisplay.css';
 
+const LANGUAGE_LABELS = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
+
 const CodeDisplay = ({ 
   code, 
   language = 'javascript', 
@@ -53,7 +55,7 @@ const CodeDisplay = ({
         <div className="code-display-header">
           {showLanguageBadge && (
             <span className="language-badge">
-              {language.toUpperCase()}
+              {LANGUAGE_LABELS[language.toLowerCase()] || language.toUpperCase()}
             </span>
           )}
           <div className="code-display-actions">

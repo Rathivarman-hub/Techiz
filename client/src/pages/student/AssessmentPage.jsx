@@ -24,6 +24,7 @@ const typeConfig = {
 };
 
 const OPTIONS_LETTERS = ['A', 'B', 'C', 'D'];
+const LANGUAGE_LABELS = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
 
 const AssessmentPage = () => {
   const { language } = useParams();
@@ -123,7 +124,7 @@ const AssessmentPage = () => {
 
   // Handle timer expiration
   useEffect(() => {
-    if (seconds === 0 && isRunning && questions.length > 0 && currentQuestion?._id) {
+    if (seconds === 0 && !isRunning && questions.length > 0 && currentQuestion?._id) {
       const questionId = currentQuestion._id;
       if (!answeredQuestionIds.has(questionId)) {
         upsertAnswer(questionId, '', TIMER_SECONDS);
@@ -360,7 +361,7 @@ const AssessmentPage = () => {
                     {typeConfig[q.type]?.label}
                   </span>
                   <span className={`question-language-badge`}>
-                    {language.toUpperCase()}
+                    {LANGUAGE_LABELS[language] || (language || '').toUpperCase()}
                   </span>
                 </div>
                 <div className="question-actions">

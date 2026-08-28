@@ -10,6 +10,7 @@ import Spinner from '../../components/Spinner';
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement);
 
 const langColors = { java: '#f89820', python: '#3776ab', c: '#a8b9cc', cpp: '#00599c', javascript: '#f7df1e' };
+const LANGUAGE_LABELS = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -47,7 +48,7 @@ const AdminDashboard = () => {
   ];
 
   const doughnutData = {
-    labels: langStats.map((l) => l._id.toUpperCase()),
+    labels: langStats.map((l) => LANGUAGE_LABELS[l._id] || l._id.toUpperCase()),
     datasets: [{
       data: langStats.map((l) => l.count),
       backgroundColor: langStats.map((l) => langColors[l._id] || '#6c63ff'),
@@ -57,7 +58,7 @@ const AdminDashboard = () => {
   };
 
   const barData = {
-    labels: langStats.map((l) => l._id.toUpperCase()),
+    labels: langStats.map((l) => LANGUAGE_LABELS[l._id] || l._id.toUpperCase()),
     datasets: [{
       label: 'Avg Score %',
       data: langStats.map((l) => Math.round(l.avgScore || 0)),

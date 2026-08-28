@@ -112,7 +112,7 @@ const QuestionManagementPage = () => {
             <Col md={2}>
               <Form.Select className="techiz-input" value={filters.language} onChange={(e) => setFilters({ ...filters, language: e.target.value })} style={{ padding: '12px 10px' }}>
                 <option value="">All Languages</option>
-                {LANGS.map((l) => <option key={l} value={l}>{l.toUpperCase()}</option>)}
+                {LANGS.map((l) => <option key={l} value={l}>{getLanguageLabel(l)}</option>)}
               </Form.Select>
             </Col>
             <Col md={2}>
