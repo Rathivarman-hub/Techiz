@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { FiBarChart2, FiCheckCircle, FiFileText, FiHelpCircle, FiPieChart, FiSettings, FiTrendingUp, FiUsers } from 'react-icons/fi';
+import { FiBarChart2, FiCheckCircle, FiFileText, FiHelpCircle, FiPieChart, FiSettings, FiTrendingUp, FiUser, FiUsers } from 'react-icons/fi';
 import api from '../../api/axios';
 import Spinner from '../../components/Spinner';
 
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
           {[
             { icon: <FiHelpCircle />, label: 'Manage Questions', to: '/admin/questions' },
             { icon: <FiUsers />, label: 'View Students', to: '/admin/students' },
-            { icon: <FiTrendingUp />, label: 'Analytics', to: '/admin/analytics' },
+            { icon: <FiUser />, label: 'Profile', to: '/admin/profile' },
             { icon: <FiSettings />, label: 'Settings', to: '/admin/settings' },
           ].map((item) => (
             <Col key={item.to} xs={6} md={3}>

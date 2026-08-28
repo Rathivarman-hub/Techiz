@@ -1025,6 +1025,28 @@ code, pre, .code-block {
   min-width: 220px;
 }
 
+.question-search-field {
+  position: relative;
+  width: 100%;
+}
+
+.question-search-field svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.question-search-input {
+  min-height: 52px;
+  padding-left: 42px !important;
+}
+
 .question-language-name {
   font-size: 1.05rem;
   color: var(--text-primary);
@@ -1068,6 +1090,10 @@ code, pre, .code-block {
   width: 25%;
   min-width: 220px;
   text-align: left;
+}
+
+.question-table {
+  min-width: 900px;
 }
 
 .question-table th:nth-child(2),

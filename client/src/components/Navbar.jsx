@@ -22,7 +22,7 @@ const TechizNavbar = () => {
         { to: '/admin', label: 'Dashboard' },
         { to: '/admin/questions', label: 'Questions' },
         { to: '/admin/students', label: 'Students' },
-        { to: '/admin/analytics', label: 'Analytics' },
+        { to: '/admin/profile', label: 'Profile' },
         { to: '/leaderboard', label: 'Leaderboard' },
       ]
     : user

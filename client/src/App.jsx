@@ -26,7 +26,6 @@ import ProfilePage from './pages/student/ProfilePage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import QuestionManagementPage from './pages/admin/QuestionManagementPage';
 import StudentsPage from './pages/admin/StudentsPage';
-import AnalyticsPage from './pages/admin/AnalyticsPage';
 import SettingsPage from './pages/admin/SettingsPage';
 
 // Layout wrapper to conditionally show navbar
@@ -123,10 +122,10 @@ function App() {
                 }
               />
               <Route
-                path="/admin/analytics"
+                path="/admin/profile"
                 element={
                   <AdminRoute>
-                    <AnalyticsPage />
+                    <SettingsPage />
                   </AdminRoute>
                 }
               />

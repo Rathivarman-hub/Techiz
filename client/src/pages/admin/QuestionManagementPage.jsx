@@ -108,7 +108,7 @@ const QuestionManagementPage = () => {
         {/* Filters */}
         <div className="glass-card mb-4 fade-in" style={{ padding: '16px 20px' }}>
           <Row className="g-2 align-items-center">
-            <Col md={3}><div style={{ position: 'relative' }}><FiSearch style={{ position: 'absolute', left: 14, top: 14, color: 'var(--text-muted)' }} /><input className="techiz-input" placeholder="Search questions" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} style={{ paddingLeft: 40 }} /></div></Col>
+            <Col md={3}><div className="question-search-field"><FiSearch /><input className="techiz-input question-search-input" placeholder="Search questions" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} /></div></Col>
             <Col md={2}>
               <Form.Select className="techiz-input" value={filters.language} onChange={(e) => setFilters({ ...filters, language: e.target.value })} style={{ padding: '12px 10px' }}>
                 <option value="">All Languages</option>
