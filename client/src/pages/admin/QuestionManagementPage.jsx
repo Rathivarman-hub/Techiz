@@ -149,16 +149,16 @@ const QuestionManagementPage = () => {
             <div style={{ overflowX: 'auto' }}>
               <table className="techiz-table question-table">
                 <thead>
-                  <tr><th>Language Type</th><th>Question</th><th>Difficulty</th><th>Marks</th><th>Actions</th></tr>
+                  <tr><th>Language</th><th>Type</th><th>Question</th><th>Difficulty</th><th>Marks</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                   {questions.map((q) => (
                     <tr key={q._id}>
                       <td>
-                        <div className="question-language-cell">
-                          <span className="question-language-name">{getLanguageLabel(q.language)}</span>
-                          <span className="question-type-pill" style={{ background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
-                        </div>
+                        <span className="question-language-name">{getLanguageLabel(q.language)}</span>
+                      </td>
+                      <td>
+                        <span className="question-type-pill" style={{ background: `${typeColors[q.type]}22`, color: typeColors[q.type] }}>{q.type}</span>
                       </td>
                       <td className="question-text-cell" style={{ maxWidth: 300, color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                         {q.question.length > 80 ? q.question.substring(0, 80) + '...' : q.question}
