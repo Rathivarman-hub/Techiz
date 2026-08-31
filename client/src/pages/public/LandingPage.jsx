@@ -9,7 +9,7 @@ const features = [
   { icon: <FiClock />, title: 'Timed Assessments', desc: '30 seconds per question with animated circular countdown and sound effects.' },
   { icon: <FiTarget />, title: 'Random Questions', desc: 'Every learner gets a unique set of 10 questions from a large question bank.' },
   { icon: <FiTrendingUp />, title: 'Live Leaderboard', desc: 'Compare performance across your community with rankings updated in real time.' },
-  { icon: <FiAward />, title: 'PDF Certificates', desc: 'Earn and download beautiful certificates upon successful completion.' },
+
   { icon: <FiShield />, title: 'Assessment Integrity', desc: 'Fullscreen enforcement and tab-switch detection keep assessments fair.' },
   { icon: <FiMoon />, title: 'Dark Mode', desc: 'Easy on the eyes — choose your preferred theme anytime.' },
 ];
@@ -73,7 +73,7 @@ const LandingPage = () => {
                 Skills Today
               </h1>
               <p className="hero-subtitle" style={{ marginTop: 20, marginBottom: 36 }}>
-                Techiz is a next-gen technical assessment platform for building and validating programming skills. Take timed coding assessments, climb the leaderboard, and earn verified certificates.
+                Techiz is a next-gen technical assessment platform for building and validating programming skills. Take timed coding assessments and climb the leaderboard.
               </p>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <Link to="/register" className="btn-techiz" style={{ fontSize: '1rem', padding: '14px 32px' }}>

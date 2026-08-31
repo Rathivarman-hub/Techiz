@@ -466,6 +466,11 @@ code, pre, .code-block {
   white-space: nowrap;
 }
 
+.admin-table th:nth-child(6),
+.admin-table td:nth-child(6) {
+  text-align: center;
+}
+
 .admin-table th:nth-child(3),
 .admin-table td:nth-child(3) {
   min-width: 220px;
@@ -968,7 +973,10 @@ code, pre, .code-block {
 .leaderboard-table td:nth-child(6) { width: 18%; }
 
 .leaderboard-table th:nth-child(7),
-.leaderboard-table td:nth-child(7) { width: 10%; }
+.leaderboard-table td:nth-child(7) {
+  width: 10%;
+  text-align: center !important;
+}
 
 .leaderboard-table .rank-badge {
   margin: 0;
@@ -1075,7 +1083,7 @@ code, pre, .code-block {
   transform: translateY(-50%);
 }
 
-.question-search-input {
+.question-search-field .question-search-input {
   min-height: 52px;
   padding-left: 42px !important;
 }

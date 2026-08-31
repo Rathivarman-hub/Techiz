@@ -4,7 +4,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
 import Spinner from '../../components/Spinner';
-import CertificateModal from '../../components/CertificateModal';
 
 const langMap = { java: 'Java', python: 'Python', c: 'C', cpp: 'C++', javascript: 'JavaScript' };
 const typeLabels = { mcq: 'MCQ', output: 'Output Prediction', syntax: 'Syntax Error', coding: 'Coding' };
@@ -12,20 +11,13 @@ const typeLabels = { mcq: 'MCQ', output: 'Output Prediction', syntax: 'Syntax Er
 const ResultsPage = () => {
   const { id } = useParams();
   const [assessment, setAssessment] = useState(null);
-  const [certificate, setCertificate] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showCert, setShowCert] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [aRes, cRes] = await Promise.all([
-          api.get(`/assessments/${id}`),
-          api.get('/certificates/my'),
-        ]);
+        const aRes = await api.get(`/assessments/${id}`);
         setAssessment(aRes.data.data);
-        const cert = cRes.data.data.find((c) => c.assessmentId?._id === id || c.assessmentId === id);
-        setCertificate(cert || null);
       } catch { toast.error('Could not load results'); }
       finally { setLoading(false); }
     };
@@ -73,9 +65,6 @@ const ResultsPage = () => {
             ))}
           </div>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {passed && certificate && (
-              <button className="btn-techiz" onClick={() => setShowCert(true)}>View Certificate</button>
-            )}
             <Link to="/languages" className="btn-outline-techiz">Try Again</Link>
             <Link to="/dashboard" className="btn-outline-techiz">Dashboard</Link>
             <Link to="/leaderboard" className="btn-outline-techiz">Leaderboard</Link>
@@ -132,10 +121,6 @@ const ResultsPage = () => {
           </div>
         )}
       </Container>
-
-      {certificate && (
-        <CertificateModal show={showCert} onHide={() => setShowCert(false)} cert={certificate} />
-      )}
     </div>
   );
 };
