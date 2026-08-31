@@ -108,21 +108,21 @@ const QuestionManagementPage = () => {
         {/* Filters */}
         <div className="glass-card mb-4 fade-in" style={{ padding: '16px 20px' }}>
           <Row className="g-2 align-items-center">
-            <Col md={3}><div className="question-search-field"><FiSearch /><input className="techiz-input question-search-input" placeholder="Search questions" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} /></div></Col>
+            <Col md={3}><div className="question-search-field"><FiSearch /><input className="techiz-input question-search-input" placeholder="Search questions" value={filters.search} onChange={(e) => { setPage(1); setFilters({ ...filters, search: e.target.value }); }} /></div></Col>
             <Col md={2}>
-              <Form.Select className="techiz-input" value={filters.language} onChange={(e) => setFilters({ ...filters, language: e.target.value })} style={{ padding: '12px 10px' }}>
+              <Form.Select className="techiz-input" value={filters.language} onChange={(e) => { setPage(1); setFilters({ ...filters, language: e.target.value }); }} style={{ padding: '12px 10px' }}>
                 <option value="">All Languages</option>
                 {LANGS.map((l) => <option key={l} value={l}>{getLanguageLabel(l)}</option>)}
               </Form.Select>
             </Col>
             <Col md={2}>
-              <Form.Select className="techiz-input" value={filters.type} onChange={(e) => setFilters({ ...filters, type: e.target.value })} style={{ padding: '12px 10px' }}>
+              <Form.Select className="techiz-input" value={filters.type} onChange={(e) => { setPage(1); setFilters({ ...filters, type: e.target.value }); }} style={{ padding: '12px 10px' }}>
                 <option value="">All Types</option>
                 {TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
               </Form.Select>
             </Col>
             <Col md={2}>
-              <Form.Select className="techiz-input" value={filters.difficulty} onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })} style={{ padding: '12px 10px' }}>
+              <Form.Select className="techiz-input" value={filters.difficulty} onChange={(e) => { setPage(1); setFilters({ ...filters, difficulty: e.target.value }); }} style={{ padding: '12px 10px' }}>
                 <option value="">All Difficulty</option>
                 {DIFFS.map((d) => <option key={d} value={d}>{d}</option>)}
               </Form.Select>
