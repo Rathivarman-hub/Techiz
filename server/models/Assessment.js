@@ -24,4 +24,23 @@ const assessmentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+// WHY: Without indexes MongoDB does a full collection scan for every query.
+// At 100k assessments each query would read every document — O(N) instead of O(log N).
+
+// Most common query: a student's completed assessments
+assessmentSchema.index({ userId: 1, status: 1 });
+
+// Leaderboard & admin filter by language + status
+assessmentSchema.index({ language: 1, status: 1 });
+
+// Sorting by completion date (used in getAllAssessments, getMyAssessments)
+assessmentSchema.index({ completedAt: -1 });
+
+// Pass-rate calculation: percentage >= 40 filter
+assessmentSchema.index({ status: 1, percentage: -1 });
+
+// Admin: finding assessments for a student sorted by date
+assessmentSchema.index({ userId: 1, completedAt: -1 });
+
 export default mongoose.model('Assessment', assessmentSchema);

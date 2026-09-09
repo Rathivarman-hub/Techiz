@@ -14,4 +14,8 @@ const certificateSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+// Used in: getMyCertificates (userId filter, sorted by issuedAt)
+certificateSchema.index({ userId: 1, issuedAt: -1 });
+
 export default mongoose.model('Certificate', certificateSchema);

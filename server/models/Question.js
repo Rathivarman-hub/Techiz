@@ -54,4 +54,17 @@ questionSchema.pre('save', function (next) {
   next();
 });
 
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+// WHY: $sample + $match in startAssessment does a collection scan without an index.
+// language+type index lets MongoDB filter before sampling, dramatically faster.
+
+// Used in: startAssessment aggregation ($match: { language })
+questionSchema.index({ language: 1, type: 1 });
+
+// Used in: getQuestions filtered queries
+questionSchema.index({ language: 1, difficulty: 1 });
+
+// Full-text search on question content (admin search box)
+questionSchema.index({ question: 'text' });
+
 export default mongoose.model('Question', questionSchema);

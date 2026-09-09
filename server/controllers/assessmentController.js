@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import Assessment from '../models/Assessment.js';
 import Question from '../models/Question.js';
 import Certificate from '../models/Certificate.js';
+import { deleteCachePattern, deleteCache } from '../utils/cache.js';
 
 const QUESTION_COUNT = 10;
 
@@ -16,16 +17,16 @@ export const startAssessment = asyncHandler(async (req, res) => {
   const questions = await Question.aggregate([
     { $match: { language } },
     { $sample: { size: QUESTION_COUNT } },
-    { 
-      $project: { 
-        answer: 0, 
+    {
+      $project: {
+        answer: 0,
         explanation: 0,
         topics: 0,
         errorType: 0,
         errorExplanation: 0,
         correctCode: 0,
-        learningTip: 0
-      } 
+        learningTip: 0,
+      },
     }, // hide answers, explanations, and learning system content from students
   ]);
 
@@ -51,7 +52,7 @@ export const startAssessment = asyncHandler(async (req, res) => {
     success: true,
     data: {
       assessmentId: assessment._id,
-      questions, // send questions without answers
+      questions,
       maxScore,
     },
   });
@@ -61,7 +62,7 @@ export const startAssessment = asyncHandler(async (req, res) => {
 // @route   POST /api/assessments/:id/submit
 // @access  Student
 export const submitAssessment = asyncHandler(async (req, res) => {
-  const { answers, status = 'completed' } = req.body; // answers: [{ questionId, selectedAnswer, timeTaken }]
+  const { answers, status = 'completed' } = req.body;
   const assessment = await Assessment.findById(req.params.id);
 
   if (!assessment) { res.status(404); throw new Error('Assessment not found'); }
@@ -72,7 +73,7 @@ export const submitAssessment = asyncHandler(async (req, res) => {
     res.status(400); throw new Error('Assessment already submitted');
   }
 
-  // Fetch correct answers
+  // Fetch correct answers — uses the _id index (primary key lookup)
   const questions = await Question.find({ _id: { $in: assessment.questions } });
   const questionMap = {};
   questions.forEach((q) => (questionMap[q._id.toString()] = q));
@@ -97,9 +98,8 @@ export const submitAssessment = asyncHandler(async (req, res) => {
   await assessment.save();
 
   // Issue certificate if passed (>= 40%)
-  let certificate = null;
   if (percentage >= 40) {
-    certificate = await Certificate.create({
+    await Certificate.create({
       userId: req.user._id,
       assessmentId: assessment._id,
       studentName: req.user.name,
@@ -109,6 +109,16 @@ export const submitAssessment = asyncHandler(async (req, res) => {
       percentage,
     });
   }
+
+  // ─── Cache Invalidation ────────────────────────────────────────────────────
+  // WHY: A new submission changes rankings, stats, and the user's own rank.
+  // We must invalidate stale cache entries so the next request gets fresh data.
+  await Promise.all([
+    deleteCachePattern('leaderboard:*'),
+    deleteCache(`rank:${req.user._id}:all`),
+    deleteCache(`rank:${req.user._id}:${assessment.language}`),
+    deleteCachePattern('admin:*'),
+  ]);
 
   res.json({
     success: true,
@@ -130,7 +140,7 @@ export const getAssessment = asyncHandler(async (req, res) => {
   const isAdmin = req.user.role === 'admin';
   if (!isOwner && !isAdmin) { res.status(403); throw new Error('Not authorized'); }
 
-  // For students viewing their own results, hide topics, explanations, and learning content
+  // For students viewing their own results, hide answer/explanation/learning content
   if (isOwner && !isAdmin) {
     assessment.answers = assessment.answers.map((a) => ({
       ...a.toObject?.() || a,
@@ -142,8 +152,8 @@ export const getAssessment = asyncHandler(async (req, res) => {
         errorType: undefined,
         errorExplanation: undefined,
         correctCode: undefined,
-        learningTip: undefined
-      }
+        learningTip: undefined,
+      },
     }));
   }
 
@@ -154,11 +164,21 @@ export const getAssessment = asyncHandler(async (req, res) => {
 // @route   GET /api/assessments/my
 // @access  Student
 export const getMyAssessments = asyncHandler(async (req, res) => {
-  const assessments = await Assessment.find({ userId: req.user._id, status: { $ne: 'in-progress' } })
-    .sort({ completedAt: -1 })
-    .select('-answers -questions');
+  const { page = 1, limit = 10, language } = req.query;
+  const filter = { userId: req.user._id, status: { $ne: 'in-progress' } };
+  if (language) filter.language = language;
 
-  res.json({ success: true, data: assessments });
+  const skip = (parseInt(page) - 1) * parseInt(limit);
+  const [total, assessments] = await Promise.all([
+    Assessment.countDocuments(filter),
+    Assessment.find(filter)
+      .sort({ completedAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .select('-answers -questions'),
+  ]);
+
+  res.json({ success: true, total, page: parseInt(page), data: assessments });
 });
 
 // @desc    Get all assessments (admin)
@@ -170,13 +190,15 @@ export const getAllAssessments = asyncHandler(async (req, res) => {
   if (language) filter.language = language;
 
   const skip = (parseInt(page) - 1) * parseInt(limit);
-  const total = await Assessment.countDocuments(filter);
-  const assessments = await Assessment.find(filter)
-    .populate('userId', 'name email college rollNumber')
-    .sort({ completedAt: -1 })
-    .skip(skip)
-    .limit(parseInt(limit))
-    .select('-answers -questions');
+  const [total, assessments] = await Promise.all([
+    Assessment.countDocuments(filter),
+    Assessment.find(filter)
+      .populate('userId', 'name email college rollNumber')
+      .sort({ completedAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .select('-answers -questions'),
+  ]);
 
-  res.json({ success: true, total, data: assessments });
+  res.json({ success: true, total, page: parseInt(page), data: assessments });
 });

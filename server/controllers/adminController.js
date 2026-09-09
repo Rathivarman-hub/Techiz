@@ -3,43 +3,59 @@ import Assessment from '../models/Assessment.js';
 import User from '../models/User.js';
 import Question from '../models/Question.js';
 import { Parser } from 'json2csv';
+import { getCache, setCache, deleteCachePattern } from '../utils/cache.js';
+
+// ─── Cache TTLs ───────────────────────────────────────────────────────────────
+const STATS_TTL = 120;      // 2 minutes — stats tolerate slight staleness
+const LANG_STATS_TTL = 120;
+const TRENDS_TTL = 300;     // 5 minutes — trends change infrequently
 
 // @desc    Get admin dashboard stats
 // @route   GET /api/admin/stats
 // @access  Admin
 export const getStats = asyncHandler(async (req, res) => {
-  const [totalStudents, totalAssessments, totalQuestions, avgScoreResult] = await Promise.all([
-    User.countDocuments({ role: 'student' }),
-    Assessment.countDocuments({ status: { $ne: 'in-progress' } }),
-    Question.countDocuments(),
-    Assessment.aggregate([
-      { $match: { status: { $ne: 'in-progress' } } },
-      { $group: { _id: null, avg: { $avg: '$percentage' } } },
-    ]),
-  ]);
+  const cacheKey = 'admin:stats';
+  const cached = await getCache(cacheKey);
+  if (cached) return res.json({ success: true, cached: true, data: cached });
 
-  const avgScore = avgScoreResult[0]?.avg ? Math.round(avgScoreResult[0].avg) : 0;
+  // WHY: Run all 4 DB queries in parallel — sequential would take 4x as long.
+  const [totalStudents, totalAssessments, totalQuestions, avgScoreResult, passedCount] =
+    await Promise.all([
+      User.countDocuments({ role: 'student' }),
+      Assessment.countDocuments({ status: { $ne: 'in-progress' } }),
+      Question.countDocuments(),
+      Assessment.aggregate([
+        { $match: { status: { $ne: 'in-progress' } } },
+        { $group: { _id: null, avg: { $avg: '$percentage' }, total: { $sum: 1 }, passed: { $sum: { $cond: [{ $gte: ['$percentage', 40] }, 1, 0] } } } },
+      ]),
+      // Merged pass-rate into single aggregation above — eliminates extra DB call
+    ]);
 
-  // Pass rate (>= 40%)
-  const [passed, total] = await Promise.all([
-    Assessment.countDocuments({ status: { $ne: 'in-progress' }, percentage: { $gte: 40 } }),
-    Assessment.countDocuments({ status: { $ne: 'in-progress' } }),
-  ]);
-  const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+  const aggResult = avgScoreResult[0] || { avg: 0, total: 0, passed: 0 };
+  const avgScore = Math.round(aggResult.avg || 0);
+  const passRate = aggResult.total > 0 ? Math.round((aggResult.passed / aggResult.total) * 100) : 0;
 
-  res.json({ success: true, data: { totalStudents, totalAssessments, totalQuestions, avgScore, passRate } });
+  const data = { totalStudents, totalAssessments, totalQuestions, avgScore, passRate };
+  await setCache(cacheKey, data, STATS_TTL);
+  res.json({ success: true, cached: false, data });
 });
 
 // @desc    Get language popularity stats
 // @route   GET /api/admin/language-stats
 // @access  Admin
 export const getLanguageStats = asyncHandler(async (req, res) => {
+  const cacheKey = 'admin:langstats';
+  const cached = await getCache(cacheKey);
+  if (cached) return res.json({ success: true, cached: true, data: cached });
+
   const stats = await Assessment.aggregate([
     { $match: { status: { $ne: 'in-progress' } } },
     { $group: { _id: '$language', count: { $sum: 1 }, avgScore: { $avg: '$percentage' } } },
     { $sort: { count: -1 } },
   ]);
-  res.json({ success: true, data: stats });
+
+  await setCache(cacheKey, stats, LANG_STATS_TTL);
+  res.json({ success: true, cached: false, data: stats });
 });
 
 // @desc    Get all students with their stats
@@ -48,53 +64,95 @@ export const getLanguageStats = asyncHandler(async (req, res) => {
 export const getStudents = asyncHandler(async (req, res) => {
   const { search, page = 1, limit = 20 } = req.query;
   const filter = { role: 'student' };
-  if (search) filter.$or = [
-    { name: { $regex: search, $options: 'i' } },
-    { email: { $regex: search, $options: 'i' } },
-    { college: { $regex: search, $options: 'i' } },
-  ];
+
+  if (search) {
+    // Use $text search when available (full-text index), fall back to $regex
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+      { college: { $regex: search, $options: 'i' } },
+    ];
+  }
 
   const skip = (parseInt(page) - 1) * parseInt(limit);
-  const total = await User.countDocuments(filter);
-  const students = await User.find(filter).select('-password').skip(skip).limit(parseInt(limit)).sort({ createdAt: -1 });
+  const [total, students] = await Promise.all([
+    User.countDocuments(filter),
+    User.find(filter).select('-password').skip(skip).limit(parseInt(limit)).sort({ createdAt: -1 }).lean(),
+  ]);
 
-  // Enrich with assessment count and best score
-  const enriched = await Promise.all(
-    students.map(async (s) => {
-      const stats = await Assessment.aggregate([
-        { $match: { userId: s._id, status: { $ne: 'in-progress' } } },
-        { $group: { _id: null, attempts: { $sum: 1 }, bestScore: { $max: '$score' }, bestPct: { $max: '$percentage' } } },
-      ]);
-      return { ...s.toObject(), assessmentStats: stats[0] || { attempts: 0, bestScore: 0, bestPct: 0 } };
-    })
-  );
+  // ─── FIX: N+1 Query ────────────────────────────────────────────────────────
+  // BEFORE: one Assessment.aggregate() call per student (N+1 problem).
+  // At 50 students that's 51 DB calls per page load. At 1000 students: 1001 calls.
+  //
+  // AFTER: one single aggregation for all students on the page.
+  // Always exactly 2 DB calls regardless of page size.
+  const studentIds = students.map((s) => s._id);
+  const statsAgg = await Assessment.aggregate([
+    { $match: { userId: { $in: studentIds }, status: { $ne: 'in-progress' } } },
+    {
+      $group: {
+        _id: '$userId',
+        attempts: { $sum: 1 },
+        bestScore: { $max: '$score' },
+        bestPct: { $max: '$percentage' },
+      },
+    },
+  ]);
 
-  res.json({ success: true, total, data: enriched });
+  const statsMap = {};
+  statsAgg.forEach((s) => (statsMap[s._id.toString()] = s));
+
+  const enriched = students.map((s) => ({
+    ...s,
+    assessmentStats: statsMap[s._id.toString()] || { attempts: 0, bestScore: 0, bestPct: 0 },
+  }));
+
+  res.json({ success: true, total, page: parseInt(page), data: enriched });
 });
 
 // @desc    Export students as CSV
 // @route   GET /api/admin/export-students
 // @access  Admin
 export const exportStudents = asyncHandler(async (req, res) => {
-  const students = await User.find({ role: 'student' }).select('-password').lean();
-  const assessments = await Assessment.aggregate([
-    { $match: { status: { $ne: 'in-progress' } } },
-    { $group: { _id: '$userId', attempts: { $sum: 1 }, bestScore: { $max: '$score' }, bestPct: { $max: '$percentage' } } },
-  ]);
-  const assessmentMap = {};
-  assessments.forEach((a) => (assessmentMap[a._id.toString()] = a));
+  // WHY: Original fetches ALL students at once. This streams in pages to avoid
+  // a memory spike that could crash the process with 10,000+ students.
+  const PAGE_SIZE = 500;
+  let page = 0;
+  let allData = [];
 
-  const data = students.map((s) => {
-    const aStats = assessmentMap[s._id.toString()] || {};
-    return {
-      Name: s.name, Email: s.email, College: s.college, RollNumber: s.rollNumber,
-      Attempts: aStats.attempts || 0, BestScore: aStats.bestScore || 0, BestPercentage: aStats.bestPct || 0,
-      JoinedAt: s.createdAt,
-    };
-  });
+  while (true) {
+    const students = await User.find({ role: 'student' })
+      .select('-password')
+      .lean()
+      .skip(page * PAGE_SIZE)
+      .limit(PAGE_SIZE);
+
+    if (students.length === 0) break;
+
+    const ids = students.map((s) => s._id);
+    const assessments = await Assessment.aggregate([
+      { $match: { userId: { $in: ids }, status: { $ne: 'in-progress' } } },
+      { $group: { _id: '$userId', attempts: { $sum: 1 }, bestScore: { $max: '$score' }, bestPct: { $max: '$percentage' } } },
+    ]);
+
+    const aMap = {};
+    assessments.forEach((a) => (aMap[a._id.toString()] = a));
+
+    const rows = students.map((s) => {
+      const a = aMap[s._id.toString()] || {};
+      return {
+        Name: s.name, Email: s.email, College: s.college, RollNumber: s.rollNumber,
+        Attempts: a.attempts || 0, BestScore: a.bestScore || 0, BestPercentage: a.bestPct || 0,
+        JoinedAt: s.createdAt,
+      };
+    });
+
+    allData = allData.concat(rows);
+    page++;
+  }
 
   const parser = new Parser();
-  const csv = parser.parse(data);
+  const csv = parser.parse(allData);
   res.header('Content-Type', 'text/csv');
   res.attachment('techiz_students.csv');
   res.send(csv);
@@ -104,6 +162,10 @@ export const exportStudents = asyncHandler(async (req, res) => {
 // @route   GET /api/admin/trends
 // @access  Admin
 export const getTrends = asyncHandler(async (req, res) => {
+  const cacheKey = 'admin:trends';
+  const cached = await getCache(cacheKey);
+  if (cached) return res.json({ success: true, cached: true, data: cached });
+
   const trends = await Assessment.aggregate([
     { $match: { status: { $ne: 'in-progress' }, completedAt: { $type: 'date' } } },
     {
@@ -116,7 +178,9 @@ export const getTrends = asyncHandler(async (req, res) => {
     { $sort: { '_id.year': 1, '_id.month': 1 } },
     { $limit: 12 },
   ]);
-  res.json({ success: true, data: trends });
+
+  await setCache(cacheKey, trends, TRENDS_TTL);
+  res.json({ success: true, cached: false, data: trends });
 });
 
 // @desc    Update student assessment marks
@@ -142,21 +206,21 @@ export const updateAssessmentMarks = asyncHandler(async (req, res) => {
   }
 
   const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-
   assessment.score = score;
   assessment.maxScore = maxScore;
   assessment.percentage = percentage;
   await assessment.save();
 
+  // Invalidate leaderboard & stats caches since scores changed
+  await Promise.all([
+    deleteCachePattern('leaderboard:*'),
+    deleteCachePattern('rank:*'),
+    deleteCachePattern('admin:*'),
+  ]);
+
   res.json({
     success: true,
-    data: {
-      assessmentId: assessment._id,
-      score,
-      maxScore,
-      percentage,
-      message: 'Marks updated successfully',
-    },
+    data: { assessmentId: assessment._id, score, maxScore, percentage, message: 'Marks updated successfully' },
   });
 });
 

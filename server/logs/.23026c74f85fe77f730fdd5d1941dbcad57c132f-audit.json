@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\rathivarman\\OneDrive\\Desktop\\Techiz\\server\\logs\\.23026c74f85fe77f730fdd5d1941dbcad57c132f-audit.json",
+    "files": [
+        {
+            "date": 1788945799769,
+            "name": "C:\\Users\\rathivarman\\OneDrive\\Desktop\\Techiz\\server\\logs\\combined-2026-09-09.log",
+            "hash": "8dd8d0e0661e432126c7bc61fd84198fd8a0289c9e80c8dbf875430e3587249a"
+        }
+    ],
+    "hashType": "sha256"
+}

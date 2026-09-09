@@ -26,4 +26,14 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// ─── Indexes ──────────────────────────────────────────────────────────────────
+// WHY: email already has unique:true which auto-creates an index. ✅
+// Adding role+createdAt for paginated student listings in admin panel.
+
+// Used in: getStudents (role: 'student', sorted by createdAt)
+userSchema.index({ role: 1, createdAt: -1 });
+
+// Full-text search for admin student search (name, email, college)
+userSchema.index({ name: 'text', email: 'text', college: 'text' });
+
 export default mongoose.model('User', userSchema);
