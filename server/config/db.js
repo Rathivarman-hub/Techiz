@@ -6,10 +6,10 @@ const connectDB = async () => {
   try {
     dns.setServers(['1.1.1.1']);
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      maxPoolSize: 20,
-      minPoolSize: 5,
+      maxPoolSize: 50,
+      minPoolSize: 10,
       socketTimeoutMS: 45000,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 15000,
       heartbeatFrequencyMS: 10000,
       retryWrites: true,
     });

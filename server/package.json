@@ -13,8 +13,7 @@
     "pm2:restart": "pm2 restart techiz-server",
     "pm2:logs": "pm2 logs techiz-server",
     "pm2:monit": "pm2 monit",
-    "pm2:status": "pm2 status",
-    "load-test": "node load-tests/autocannon-test.js"
+    "pm2:status": "pm2 status"
   },
   "keywords": [],
   "author": "",

@@ -1,10 +1,6 @@
 import { getRedisClient, isRedisConnected } from '../config/redis.js';
 import logger from '../config/logger.js';
 
-/**
- * Get a cached value by key.
- * Returns parsed JSON or null if not found / Redis down.
- */
 export const getCache = async (key) => {
   if (!isRedisConnected()) return null;
   try {
@@ -16,10 +12,6 @@ export const getCache = async (key) => {
   }
 };
 
-/**
- * Set a cached value with an optional TTL (seconds).
- * Silently degrades if Redis is unavailable.
- */
 export const setCache = async (key, data, ttlSeconds = 60) => {
   if (!isRedisConnected()) return;
   try {
@@ -29,9 +21,6 @@ export const setCache = async (key, data, ttlSeconds = 60) => {
   }
 };
 
-/**
- * Delete a specific cache key.
- */
 export const deleteCache = async (key) => {
   if (!isRedisConnected()) return;
   try {
@@ -41,10 +30,6 @@ export const deleteCache = async (key) => {
   }
 };
 
-/**
- * Delete all keys matching a glob pattern (e.g. "leaderboard:*").
- * Uses SCAN to avoid blocking Redis.
- */
 export const deleteCachePattern = async (pattern) => {
   if (!isRedisConnected()) return;
   try {
