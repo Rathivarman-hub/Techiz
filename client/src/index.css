@@ -45,13 +45,21 @@
   --bg-secondary: #0A1120;
   --bg-card: #0E182D;
   --bg-glass: rgba(14, 24, 45, 0.92);
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
+  --text-primary: #F8FAFC !important;
+  --text-secondary: #E2E8F0 !important;
   --text-muted: #94A3B8;
   --border: rgba(209, 0, 122, 0.25);
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.8);
   --navbar-bg: rgba(4, 8, 16, 0.96);
+}
+
+[data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3, [data-theme='dark'] h4, [data-theme='dark'] h5, [data-theme='dark'] h6, [data-theme='dark'] th, [data-theme='dark'] td, [data-theme='dark'] span, [data-theme='dark'] p, [data-theme='dark'] label {
+  color: inherit;
+}
+
+[data-theme='dark'] .techiz-table td, [data-theme='dark'] .techiz-table th {
+  color: #F8FAFC !important;
 }
 
 [data-theme='dark'] .brand-mark {
