@@ -40,9 +40,18 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme='dark'] .brand-mark {
-  filter: invert(1) grayscale(1) contrast(200%);
-  mix-blend-mode: screen;
+[data-theme='dark'] {
+  --bg-primary: #040810;
+  --bg-secondary: #0A1120;
+  --bg-card: #0E182D;
+  --bg-glass: rgba(14, 24, 45, 0.92);
+  --text-primary: #F8FAFC !important;
+  --text-secondary: #E2E8F0 !important;
+  --text-muted: #94A3B8;
+  --border: rgba(209, 0, 122, 0.25);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.8);
+  --navbar-bg: rgba(4, 8, 16, 0.96);
 }
 
 [data-theme='dark'] .card,
@@ -58,7 +67,7 @@
 [data-theme='dark'] .techiz-card *,
 [data-theme='dark'] .glass-card *,
 [data-theme='dark'] .stat-card * {
-  color: unset;
+  color: inherit;
 }
 
 [data-theme='dark'] .stat-label {
