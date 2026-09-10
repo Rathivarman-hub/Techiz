@@ -6,6 +6,7 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { FiBarChart2, FiCheckCircle, FiFileText, FiHelpCircle, FiPieChart, FiSettings, FiTrendingUp, FiUser, FiUsers } from 'react-icons/fi';
 import api from '../../api/axios';
 import Spinner from '../../components/Spinner';
+import { useTheme } from '../../context/ThemeContext';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement);
 
@@ -78,10 +79,22 @@ const AdminDashboard = () => {
     }],
   };
 
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const chartOptions = {
     responsive: true,
-    plugins: { legend: { labels: { color: 'var(--text-secondary)' } } },
-    scales: { x: { ticks: { color: 'var(--text-muted)' } }, y: { ticks: { color: 'var(--text-muted)' } } },
+    plugins: { legend: { labels: { color: isDark ? '#CBD5E1' : 'var(--text-secondary)' } } },
+    scales: { 
+      x: { 
+        ticks: { color: isDark ? '#94A3B8' : 'var(--text-muted)' },
+        grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)' }
+      }, 
+      y: { 
+        ticks: { color: isDark ? '#94A3B8' : 'var(--text-muted)' },
+        grid: { color: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)' }
+      } 
+    },
   };
 
   return (
