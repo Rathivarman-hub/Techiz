@@ -63,13 +63,38 @@
 }
 
 [data-theme='dark'] .techiz-navbar .nav-link {
-  color: #CBD5E1 !important;
+  color: #F8FAFC !important;
+  font-weight: 600;
 }
 
 [data-theme='dark'] .techiz-navbar .nav-link:hover,
 [data-theme='dark'] .techiz-navbar .nav-link.active {
-  color: #F8FAFC !important;
-  background: rgba(209, 0, 122, 0.15) !important;
+  color: #ffffff !important;
+  background: rgba(209, 0, 122, 0.25) !important;
+}
+
+[data-theme='dark'] .admin-icon-button {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #F8FAFC;
+}
+
+[data-theme='dark'] .admin-icon-button:hover {
+  background: rgba(209, 0, 122, 0.25);
+  color: #ffffff;
+  border-color: #D1007A;
+}
+
+[data-theme='dark'] .techiz-table td:last-child button {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .techiz-table td:last-child button:hover {
+  background: rgba(209, 0, 122, 0.25);
+  color: #ffffff;
+  border-color: #D1007A;
 }
 
 /* ============================================
