@@ -262,14 +262,14 @@ const StudentsPage = () => {
       </Container>
 
       {/* Edit Marks Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
-        <Modal.Header closeButton style={{ borderBottom: '1px solid var(--border)' }}>
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered contentClassName="dark-modal">
+        <Modal.Header closeButton style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-card)', color: 'var(--text-primary)' }}>
           <Modal.Title style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Edit Assessment Marks</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ padding: '24px' }}>
+        <Modal.Body style={{ padding: '24px', background: 'var(--bg-card)', color: 'var(--text-primary)' }}>
           {editingAssessment && (
             <div>
-              <p style={{ color: 'var(--text-muted)', marginBottom: 16 }}>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 16 }}>
                 <strong>Language:</strong> {langMap[editingAssessment.language] || editingAssessment.language}
               </p>
               <Form.Group className="mb-3">
@@ -303,10 +303,10 @@ const StudentsPage = () => {
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer style={{ borderTop: '1px solid var(--border)' }}>
+        <Modal.Footer style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-card)' }}>
           <button
             onClick={() => setShowEditModal(false)}
-            style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-secondary)', cursor: 'pointer' }}
+            style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', cursor: 'pointer' }}
           >
             Cancel
           </button>

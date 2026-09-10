@@ -117,7 +117,7 @@ const startServer = async () => {
   await connectRedis();
 
   const server = app.listen(PORT, () =>
-    logger.info(`🚀 Techiz server running on port ${PORT} [PID: ${process.pid}]`)
+    logger.info(`🚀 Synexia server running on port ${PORT} [PID: ${process.pid}]`)
   );
 
   const gracefulShutdown = async (signal) => {
