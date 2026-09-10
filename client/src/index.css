@@ -62,9 +62,22 @@
   color: #F8FAFC !important;
 }
 
-[data-theme='dark'] .techiz-navbar .nav-link {
+[data-theme='dark'] .btn-outline-techiz {
+  border-color: #D1007A !important;
   color: #F8FAFC !important;
-  font-weight: 600;
+  background: rgba(209, 0, 122, 0.1) !important;
+}
+
+[data-theme='dark'] .btn-outline-techiz:hover {
+  background: #D1007A !important;
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .techiz-table td svg,
+[data-theme='dark'] .admin-icon-button svg,
+[data-theme='dark'] .techiz-table td button svg {
+  color: #F8FAFC !important;
+  stroke: #F8FAFC !important;
 }
 
 [data-theme='dark'] .techiz-navbar .nav-link:hover,
