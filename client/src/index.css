@@ -54,10 +54,11 @@
   --navbar-bg: rgba(4, 8, 16, 0.96);
 }
 
-[data-theme='dark'] .modal-content {
-  background-color: var(--bg-card) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border) !important;
+[data-theme='dark'] .stat-number {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  color: #F8FAFC !important;
 }
 
 [data-theme='dark'] .modal-header,
