@@ -54,11 +54,32 @@
   --navbar-bg: rgba(4, 8, 16, 0.96);
 }
 
-[data-theme='dark'] .stat-number {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: #F8FAFC !important;
+[data-theme='dark'] .card,
+[data-theme='dark'] .techiz-card,
+[data-theme='dark'] .glass-card,
+[data-theme='dark'] .stat-card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme='dark'] .card *,
+[data-theme='dark'] .techiz-card *,
+[data-theme='dark'] .glass-card *,
+[data-theme='dark'] .stat-card * {
+  color: inherit;
+}
+
+[data-theme='dark'] .stat-label {
+  color: #CBD5E1 !important;
+}
+
+[data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3, [data-theme='dark'] h4, [data-theme='dark'] h5, [data-theme='dark'] h6 {
   color: #F8FAFC !important;
+}
+
+[data-theme='dark'] p, [data-theme='dark'] span, [data-theme='dark'] label {
+  color: var(--text-secondary);
 }
 
 [data-theme='dark'] .modal-header,
