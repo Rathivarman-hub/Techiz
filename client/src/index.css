@@ -1,37 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap');
 
 /* ============================================
-   CSS DESIGN SYSTEM – TECHIZ
+   CSS DESIGN SYSTEM – SYNEXIA
    ============================================ */
 
 :root {
   /* Brand Colors */
-  --primary: #176b87;
-  --primary-dark: #0f4f68;
-  --primary-light: #2e91a5;
-  --secondary: #d28b3d;
-  --accent: #d96555;
-  --warning: #d99a3d;
-  --danger: #c94f5b;
-  --success: #27856b;
+  --primary: #002366;
+  --primary-dark: #00163D;
+  --primary-light: #003399;
+  --secondary: #D1007A;
+  --accent: #E6008C;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --success: #10B981;
 
   /* Light Theme */
-  --bg-primary: #f3f7f8;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --bg-glass: rgba(255, 255, 255, 0.9);
-  --text-primary: #172b35;
-  --text-secondary: #46616c;
-  --text-muted: #718993;
-  --border: rgba(23, 107, 135, 0.16);
-  --shadow: 0 4px 24px rgba(23, 67, 82, 0.1);
-  --shadow-lg: 0 8px 48px rgba(23, 67, 82, 0.16);
-  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --bg-primary: #F4F7FB;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.92);
+  --text-primary: #0B132B;
+  --text-secondary: #3A506B;
+  --text-muted: #707991;
+  --border: rgba(0, 35, 102, 0.14);
+  --shadow: 0 4px 24px rgba(0, 35, 102, 0.08);
+  --shadow-lg: 0 12px 48px rgba(0, 35, 102, 0.15);
+  --navbar-bg: rgba(255, 255, 255, 0.96);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #176b87 0%, #2a9d8f 100%);
-  --gradient-hero: linear-gradient(135deg, #102f3d 0%, #15566b 52%, #287f8c 100%);
-  --gradient-card: linear-gradient(135deg, rgba(23,107,135,0.06) 0%, rgba(210,139,61,0.06) 100%);
+  /* Gradients matching the SYNEXIA logo */
+  --gradient-primary: linear-gradient(135deg, #002366 0%, #D1007A 100%);
+  --gradient-hero: linear-gradient(135deg, #000B1A 0%, #001F5C 50%, #B8006C 100%);
+  --gradient-card: linear-gradient(135deg, rgba(0,35,102,0.05) 0%, rgba(209,0,122,0.05) 100%);
 
   /* Spacing */
   --radius: 12px;
@@ -41,17 +41,22 @@
 }
 
 [data-theme='dark'] {
-  --bg-primary: #10252d;
-  --bg-secondary: #142f39;
-  --bg-card: #193943;
-  --bg-glass: rgba(25, 57, 67, 0.9);
-  --text-primary: #edf5f4;
-  --text-secondary: #b9d0d1;
-  --text-muted: #87a7aa;
-  --border: rgba(103, 190, 187, 0.22);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.6);
-  --navbar-bg: rgba(15, 15, 26, 0.95);
+  --bg-primary: #040810;
+  --bg-secondary: #0A1120;
+  --bg-card: #0E182D;
+  --bg-glass: rgba(14, 24, 45, 0.92);
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --border: rgba(209, 0, 122, 0.25);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.8);
+  --navbar-bg: rgba(4, 8, 16, 0.96);
+}
+
+[data-theme='dark'] .brand-mark {
+  filter: invert(1) grayscale(1) contrast(200%);
+  mix-blend-mode: screen;
 }
 
 /* ============================================
@@ -103,9 +108,9 @@ code, pre, .code-block {
 
 .brand-mark {
   display: inline-block;
-  width: 42px;
-  height: 34px;
-  margin-right: 8px;
+  height: 44px;
+  width: auto;
+  max-width: 180px;
   object-fit: contain;
   vertical-align: middle;
 }

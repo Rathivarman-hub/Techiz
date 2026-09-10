@@ -63,7 +63,7 @@ const LandingPage = () => {
           <Row className="align-items-center g-5">
             <Col lg={6} className="fade-in">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                <span style={{ background: 'rgba(108,99,255,0.2)', border: '1px solid rgba(108,99,255,0.4)', borderRadius: 20, padding: '4px 16px', fontSize: '0.8rem', color: '#a8a0ff', fontWeight: 600, letterSpacing: 1 }}>
+                <span style={{ background: 'rgba(209,0,122,0.2)', border: '1px solid rgba(209,0,122,0.4)', borderRadius: 20, padding: '4px 16px', fontSize: '0.8rem', color: '#ff66c4', fontWeight: 600, letterSpacing: 1 }}>
                   <FiZap /> PROGRAMMING ASSESSMENT PLATFORM
                 </span>
               </div>
@@ -73,7 +73,7 @@ const LandingPage = () => {
                 Skills Today
               </h1>
               <p className="hero-subtitle" style={{ marginTop: 20, marginBottom: 36 }}>
-                Techiz is a next-gen technical assessment platform for building and validating programming skills. Take timed coding assessments and climb the leaderboard.
+                SYNEXIA is a next-gen technical assessment platform for building and validating programming skills. Take timed coding assessments and climb the leaderboard.
               </p>
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <Link to="/register" className="btn-techiz" style={{ fontSize: '1rem', padding: '14px 32px' }}>
@@ -119,7 +119,7 @@ const LandingPage = () => {
       <section style={{ padding: '80px 0', background: 'var(--bg-primary)' }}>
         <Container>
           <div ref={addReveal} className="reveal text-center mb-5">
-            <h2 className="section-title">Why Choose <span className="gradient-text">Techiz?</span></h2>
+            <h2 className="section-title">Why Choose <span className="gradient-text">SYNEXIA?</span></h2>
             <div className="divider" />
             <p className="section-subtitle mt-3">Everything you need to ace your technical interviews and college assessments.</p>
           </div>
@@ -162,11 +162,11 @@ const LandingPage = () => {
       </section>
 
       {/* ——— CTA ——— */}
-      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, #6c63ff, #00d4aa)' }}>
+      <section style={{ padding: '80px 0', background: 'var(--gradient-primary)' }}>
         <Container className="text-center">
           <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#fff', marginBottom: 16 }}>Ready to Get Started?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem', marginBottom: 32 }}>Join thousands of learners already using Techiz.</p>
-          <Link to="/register" className="btn-techiz" style={{ background: '#fff', color: '#6c63ff', fontSize: '1.1rem', padding: '14px 36px' }}>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.1rem', marginBottom: 32 }}>Join thousands of learners already using SYNEXIA.</p>
+          <Link to="/register" className="btn-techiz" style={{ background: '#fff', color: '#002366', fontSize: '1.1rem', padding: '14px 36px' }}>
             Create Free Account
           </Link>
         </Container>
@@ -177,7 +177,7 @@ const LandingPage = () => {
         <Container>
           <Row className="g-4 mb-4">
             <Col md={4}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, background: 'linear-gradient(135deg,#6c63ff,#00d4aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 12 }}>Techiz</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 800, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 12 }}>SYNEXIA</div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Next-gen programming assessment platform for building practical skills.</p>
             </Col>
             <Col md={2}>
@@ -201,7 +201,7 @@ const LandingPage = () => {
             </Col>
           </Row>
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: 20, textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-            © {new Date().getFullYear()} Techiz. Built for people who build with code.
+            © {new Date().getFullYear()} SYNEXIA. Built for people who build with code.
           </div>
         </Container>
       </footer>

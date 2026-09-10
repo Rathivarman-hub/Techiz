@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.jpg';
 
 const TechizNavbar = () => {
   const { user, logout } = useAuth();
@@ -39,8 +39,7 @@ const TechizNavbar = () => {
     <Navbar expand="lg" className="techiz-navbar" expanded={expanded}>
       <Container>
         <Navbar.Brand as={Link} to="/" className="navbar-brand">
-          <img className="brand-mark" src={logo} alt="" aria-hidden="true" />
-          <span className="brand-name">Techiz</span>
+          <img className="brand-mark" src={logo} alt="SYNEXIA" />
         </Navbar.Brand>
         <Navbar.Toggle
           aria-controls="techiz-nav"
