@@ -62,9 +62,14 @@
   color: #F8FAFC !important;
 }
 
-[data-theme='dark'] .brand-mark {
-  filter: invert(1) grayscale(1) contrast(200%);
-  mix-blend-mode: screen;
+[data-theme='dark'] .techiz-navbar .nav-link {
+  color: #CBD5E1 !important;
+}
+
+[data-theme='dark'] .techiz-navbar .nav-link:hover,
+[data-theme='dark'] .techiz-navbar .nav-link.active {
+  color: #F8FAFC !important;
+  background: rgba(209, 0, 122, 0.15) !important;
 }
 
 /* ============================================
